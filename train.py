@@ -61,14 +61,24 @@ except ImportError:
     TENSORBOARD_FOUND = False
 
 def set_glo_vector(viewpoint_cam, gaussians, camera_inds):
-    camera_ind = camera_inds[viewpoint_cam.uid]
-    viewpoint_cam.glo_vector = torch.cat(
-        [gaussians.glo[camera_ind], torch.tensor([
-                math.log(
-                viewpoint_cam.iso * viewpoint_cam.exposure / 1000),
-            ], device=gaussians.glo.device)
-         ]
-    )
+    #camera_ind = camera_inds[viewpoint_cam.uid]
+    #viewpoint_cam.glo_vector = torch.cat(
+        #[gaussians.glo[camera_ind], torch.tensor([
+                #math.log(
+                #viewpoint_cam.iso * viewpoint_cam.exposure / 1000),
+            #], device=gaussians.glo.device)
+         #]
+    #)
+    if viewpoint_cam.uid in camera_inds:
+        camera_ind = camera_inds[viewpoint_cam.uid]
+        viewpoint_cam.glo_vector = torch.cat(
+            [gaussians.glo[camera_ind], torch.tensor([
+                    math.log(
+                    viewpoint_cam.iso * viewpoint_cam.exposure / 1000),
+                ], device=gaussians.glo.device)
+            ]
+        )
+
 
 def training(dataset : ModelParams, opt : OptimizationParams, pipe : PipelineParams, testing_iterations : List[int], saving_iterations : List[int], checkpoint_iterations : List[int], checkpoint, debug_from):
     first_iter = 0
